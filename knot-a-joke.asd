@@ -5,7 +5,7 @@
   :author "Alexandr Popolitov <popolit@gmail.com>"
   :license "MIT"
   :serial t
-  :depends-on (#:iterate #:cl-itertools #:esrap-liquid #:defmacro-enhance)
+  :depends-on (#:iterate #:cl-itertools #:esrap-liquid #:defmacro-enhance #:cl-interpol)
   :components ((:file "package")
 	       (:file "parsing-macro")
 	       (:file "parsing")
