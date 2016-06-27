@@ -5,6 +5,10 @@
   :author "Alexandr Popolitov <popolit@gmail.com>"
   :license "MIT"
   :serial t
+  :depends-on (#:iterate #:cl-itertools #:esrap-liquid #:defmacro-enhance)
   :components ((:file "package")
-               (:file "knot-a-joke")))
+	       (:file "parsing-macro")
+	       (:file "parsing")
+               (:file "knot-a-joke")
+	       (:static-file "rep-graph-2.txt")))
 
