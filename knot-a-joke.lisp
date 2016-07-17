@@ -206,8 +206,8 @@
 		       (hash->assoc specs)))))
 
 (defun new-appearances (direct-hashes nplet-layer)
-  (let ((old-graph (extract-n-plet-subgraph direct-hashes (1- nplet-layer)))
-	(new-graph (extract-n-plet-subgraph direct-hashes nplet-layer)))
+  (let ((old-graph (reverse-hashes (extract-n-plet-subgraph direct-hashes (1- nplet-layer))))
+	(new-graph (reverse-hashes (extract-n-plet-subgraph direct-hashes nplet-layer))))
     (let ((res '()))
       (iter (for (layer edges) in-hashtable new-graph)
 	    (iter (for (node nil) in-hashtable edges)
@@ -548,3 +548,17 @@
     (4 (9 3) (6 6) (7 5) (8 4) (6 3 3) (6 5 1) (9 2 1) (5 4 3) (5 4 2 1) (6 3 2 1))
     (3 (6 3))
     (2) (1) (0)))
+
+(defparameter *rep-2-1-quadruplet-appearances*
+  '((3 (4 4 1) (5 2 2) (3 2 2 2) (3 3 3) (3 3 1 1 1))))
+    
+
+(defparameter *rep-2-quadruplet-appearances*
+  '((6 (9 2 1) (8 3 1) (8 2 2) (7 4 1) (6 5 1) (6 4 2)
+     (7 3 2) (7 2 2 1) (6 2 2 2) (7 3 1 1) (6 4 1 1)
+     (6 3 3) (8 2 1 1) (5 4 3) (4 4 4) (5 5 1 1) (5 5 2)
+     (5 2 2 2 1) (6 2 2 1 1) (5 4 1 1 1) (6 3 1 1 1) (7 2 1 1 1))
+    (5 (7 2 1) (6 3 1) (6 2 2) (5 4 1) (4 4 2) (5 3 2) (5 2 2 1)
+     (5 3 1 1) (4 4 1 1) (4 3 3) (6 2 1 1))
+    (4 (5 2 1) (4 3 1))))
+
