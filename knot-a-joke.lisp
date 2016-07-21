@@ -263,6 +263,30 @@
 					  (cdr sorted-graph)))
 	(yield (reverse res))))
       
+(defun pre-r-matrix (direct-hashes)
+  (let ((res-hash (make-hash-table :test #'equal))
+	(res-list nil))
+    (iter (for path in-it (graph-paths (sort-graph (s-exps direct-hashes))))
+	  (for i from 0)
+	  (push path
+		res-list)
+	  (let ((pre-path nil))
+	    (iter (for path-tail on path)
+		  (when (not (cdr path))
+		    (terminate))
+		  (push (cons i (car path))
+			(gethash (cons pre-path
+				       (cdr path))
+				 res-hash))
+		  (push (car path-tail) pre-path))))
+    (list res-list res-hash)))
+		  
+;; (defun %serialize-pre-r-matrix (stream pre-r-matrix)
+;;   (destructuring-bind (paths path-bunches) pre-r-matrix
+;;     (iter (for path in paths)
+;; 	  (for i from 0)
+;; 	  (format stream "
+      
 
 (defparameter *rep-3-layer-4*
   '(((12) ((9) 1))
