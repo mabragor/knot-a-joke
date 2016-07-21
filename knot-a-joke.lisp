@@ -216,6 +216,53 @@
 		  (finally (push (cons layer sub-res) res))))
       res)))
 
+(defun more-for-partitions (lst1 lst2)
+  "The > defined on partitions"
+  (let ((sum1 (apply #'+ lst1))
+	(sum2 (apply #'+ lst2)))
+    (cond ((> sum1 sum2) t)
+	  ((< sum1 sum2) nil)
+	  (t (iter (for elt1 in lst1)
+		   (for elt2 in lst2)
+		   (cond ((> elt1 elt2) (return t))
+			 ((< elt1 elt2) (return nil)))
+		   ;; at this stage partitions are for sure identical
+		   ;; -- because sums are equal and all elements of one partition
+		   ;; are found precisely in another.
+		   (finally (return nil)))))))
+
+(defun sort-graph (s-exps)
+  (let ((sorted-layers (sort s-exps #'< :key #'cadr)))
+    (iter (for layer in sorted-layers)
+	  (setf (caddr layer) (sort (caddr layer) #'more-for-partitions :key #'car))
+	  (iter (for branch in (caddr layer))
+		(setf (cdr branch) (sort (cdr branch) #'more-for-partitions :key #'car))))
+    sorted-layers))
+
+;; OK, let's write a crappy version and then
+;; tune it to a working one
+
+(defiter unter-graph-paths (path sorted-graph-tail)
+  ;; (format t "  level ~a tail: ~a~%" path sorted-graph-tail)
+  (if (not sorted-graph-tail)
+      (yield path)
+      (let ((edges (cdr (assoc (caar path)
+			       (caddr (car sorted-graph-tail))
+			       :test #'equal))))
+	(if (not edges)
+	    (yield path)
+	    (iter (for edge in edges)
+		  (iter (for res in-it (unter-graph-paths (cons edge path)
+							  (cdr sorted-graph-tail)))
+			(yield res)))))))
+
+
+(defiter graph-paths (sorted-graph)
+  ;; (format t "Toplevel~%")
+  (iter (for res in-it (unter-graph-paths (list (cadar (caddr (car sorted-graph))))
+					  (cdr sorted-graph)))
+	(yield (reverse res))))
+      
 
 (defparameter *rep-3-layer-4*
   '(((12) ((9) 1))
